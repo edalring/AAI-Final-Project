@@ -25,7 +25,7 @@ class Recoder:
 
 class Logger:
     def __init__(self, args):
-        self.writer = SummaryWriter(log_dir=args.model_dir)
+        self.writer = SummaryWriter(log_dir=args.model_dir + '/logs')
         self.recoder = Recoder()
         self.model_dir = args.model_dir
 

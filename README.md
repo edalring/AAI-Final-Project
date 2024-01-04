@@ -1,6 +1,50 @@
 # AAI-Final-Project
 
 
+# Get Started
+
+## Dependencies
+> Recommanded: use Python virtual environment
+>   ```bash
+>       python -m venv venv
+>       source venv/bin/activate # MacOS/Linux
+>       # venv\Scripts\activate # Windows
+>   ```
+
+- For Windows with cuda
+  ```bash
+  pip install -r requirements_windows_cuda.txt
+  ```
+- For MacOS without cuda
+  ```bash
+  pip install -r requirements_macos.txt
+  ```
+
+## Options
+
+You can see the options in `options.py`
+
+## Train model
+
+```bash
+python train.py
+```
+
+
+- You can see the generated directory `checkpoints`, which save the model parameters, tensorboard logs and training options.
+  - `checkpoints/{model_name}/[epoch]_[step].pth`: model parameters
+  - `checkpoints/{model_name}/logs/`: tensorboard logs
+  - `checkpoints/{model_name}/args.txt`: training options
+
+- You can utilize the tensorboard logs to visualize the training process.
+  ```bash
+    tensorboard --logdir checkpoints/{model_name}/logs/
+  ```
+
+
+
+
+
 # Library / Package
 - [Pytorch](https://pytorch.org/) is used for DL.
 - [Tensorboard](https://www.tensorflow.org/tensorboard) is used for visualization.
