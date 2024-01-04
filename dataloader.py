@@ -1,54 +1,55 @@
 import numpy as np
 from torch.utils.data import Dataset
-import os
 import torchvision.transforms as transforms
 import torch
+from pathlib import Path
+from utils.torch_utils import load_npy_as_ndarray, multi_processes_execute
 
 class MNISTDataset(Dataset):
     def __init__(self, data_path, mode):
-        self.data = []
+        self.data_root = Path(data_path) / mode
+
+        if not self.data_root.exists():
+            # raise error
+            print(f'Dataset {self.data_root} does not exist!')
+            exit(1)
+
+
         self.mode = mode
         # self.label = []
         
-        if(mode == 'train'):
-            for i in range(9):
-                sub_folder_path = data_path + '/train/' + str(i) + '/'
-                files =  os.listdir(sub_folder_path)
-                for item in files:
-                    # src = np.load(sub_folder_path + item)
-                    self.data.append(sub_folder_path + item)
-
-        elif(mode == 'val'):
-            for i in range(9):
-                sub_folder_path = data_path + '/val/' + str(i) + '/'
-                files =  os.listdir(sub_folder_path)
-                for item in files:
-                    self.data.append(sub_folder_path + item)
-
-        elif(mode == 'test'):
-            sub_folder_path = data_path + '/test'
-            files =  os.listdir(sub_folder_path)
-            for item in files:
-                pic = np.load(sub_folder_path + item)
-                self.data.append(pic)
-
-    def __len__(self):
-        return len(self.data)
-    
-    def __getitem__(self, index):
-        data = self.data[index]
-        # print(data)
-        # label = self.label[index]
-        if self.mode == 'train' or 'val':
-            img = np.load(data)
-            # print(img.shape)
-            img = transforms.Compose([
+        self.data_paths = list(self.data_root.glob('**/*.npy'))
+        
+        self.transform = transforms.Compose([
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,), (0.5,))
-            ])(img)
-            img = torch.transpose(img, 0, 1) 
-            label = np.zeros([10])
-            id = int(data.split('/')[-2])
-            label[id] = 1
+        ])
+
+        # self.images = multi_processes_execute(self.load_npy_as_tensor, self.data_paths, workers=16)
+
+        # if mode == 'test':
+        #     self.labels = [0] * len(self.images)
+        # else:
+        #     self.labels = [torch.Tensor(int(path.parent.name)) for path in self.data_paths]
+
+    
+    def load_npy_as_tensor(self, path):
+        img = self.transform(load_npy_as_ndarray(path))
+        return torch.transpose(img, 0, 1) 
         
+        # return load_npy_as_ndarray(path)
+
+    def __len__(self):
+        return len(self.data_paths)
+    
+    def __getitem__(self, index):
+        path = self.data_paths[index]
+        img = self.load_npy_as_tensor(path)
+        # print(data)
+        # label = self.label[index]
+        if self.mode == 'test':
+            return img, 0   
+        else:
+            label = int(path.parent.name)
+
             return img, label
