@@ -6,9 +6,8 @@ from pathlib import Path
 from tqdm import tqdm
 from multiprocessing import Pool
 
-# 加载 .npy 文件为 NumPy 数组
-def load_npy_as_array(file_path):
-    return np.load(file_path)
+from utils.torch_utils import load_npy_as_ndarray
+
 
 
 # 展示图片
@@ -29,14 +28,12 @@ def export_to_greyscale_png(image_array, save_path, use_plt=False):
 
 def save_datum_as_image(path_pair):
     datum_path, output_path = path_pair
-    datum = load_npy_as_array(datum_path)
+    datum = load_npy_as_ndarray(datum_path)
     # datum is 10 * 28 * 28, sum up to 28 * 28
     datum = datum.sum(axis=0)
 
     export_to_greyscale_png(datum, output_path)
 
-def load_npy_as_array(data_path, dtype=np.float32):
-    return np.load(data_path).astype(dtype)
 
 def trans_np_2_image(data_path, save_path):
     data_root = Path(data_path)
