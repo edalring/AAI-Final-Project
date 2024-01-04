@@ -30,8 +30,6 @@ class Trainer:
         self.epochs = args.epochs
         self.args = args
 
-
-        torch.manual_seed(args.seed)
         self.logger = logger.Logger(args)
 
         # Adam optimizer is the default choice, which is the best choice in most cases

@@ -22,9 +22,17 @@ def load_match_dict(model, model_path):
     # 3. load the new state dict
     model.load_state_dict(model_dict)
 
+def set_rand_seed(args):
+    seed = args.seed
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    np.random.seed(seed)
 
 def prepare_model(args, is_train: bool = True):
     model = select_model(args)
+
+    set_rand_seed(args)
+
     if is_train:
         if args.load_model_path != '':
             print("=> using pre-trained weights for DPSNet")
