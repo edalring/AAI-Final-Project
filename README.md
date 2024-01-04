@@ -11,6 +11,8 @@ We need to eliminate the influence of unstable feature and so on in model traini
 - Input: modified MNIST images
   - add noise : assign wrong label to some images
   - add extra unstable/unrelated channels: $28 * 28$ -> $10 * 28 * 28$
+    - The real greyscale channel may be one of the 10 channels, others channels are filled with 0s
+    - For example, for training data, the grayscale channel is the first channel, while the grayscale channel in the test data is the seventh channel (of course, it may also be other channel)
 - Output: the correct label of the image
   
 # Get Started
