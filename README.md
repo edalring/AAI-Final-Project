@@ -1,6 +1,18 @@
 # AAI-Final-Project
 
+## Domain
+This project is about invariant learning in DL. 
 
+## Goal
+We need to eliminate the influence of unstable feature and so on in model training and reasoning.
+
+## Input & Output
+
+- Input: modified MNIST images
+  - add noise : assign wrong label to some images
+  - add extra unstable/unrelated channels: $28 * 28$ -> $10 * 28 * 28$
+- Output: the correct label of the image
+  
 # Get Started
 
 ## Dependencies
