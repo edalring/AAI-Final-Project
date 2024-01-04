@@ -51,3 +51,17 @@ python train.py
 - [torch_base](https://github.com/ahangchen/torch_base): DL Pytorch skeleton code
 - [matplotlib](https://matplotlib.org/) is used for visualization.
 - tqdm: is used for progress bar.
+
+# Reference
+
+## MNIST ranking
+
+- [paperwithcode](https://paperswithcode.com/sota/image-classification-on-mnist)
+
+## Papers
+
+[1] Bao, Yujia, Shiyu Chang, and Regina Barzilay. "Learning stable classifiers by transferring unstable features." International Conference on Machine Learning. PMLR, 2022.
+
+[2] Arjovsky, Martin, et al. "Invariant risk minimization." arXiv preprint arXiv:1907.02893 (2019).
+
+[3] LeCun, Yann, et al. "Gradient-based learning applied to document recognition." Proceedings of the IEEE 86.11 (1998): 2278-2324.
