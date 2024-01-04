@@ -57,6 +57,8 @@ python train.py
 ## MNIST ranking
 
 - [paperwithcode](https://paperswithcode.com/sota/image-classification-on-mnist)
+- [Reasonable Doubt: Get Onto the Top 35 MNIST Leaderboard by Quantifying Aleatoric Uncertainty](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html#4d4e495354)
+ 
 
 ## Papers
 
