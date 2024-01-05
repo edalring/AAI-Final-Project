@@ -20,16 +20,18 @@ We need to eliminate the influence of unstable feature and so on in model traini
 - row index: train label
 - colomn index: channel index of greyscale data
 
-    [[5365.   54.   73.   61.   67.   73.   66.   46.   64.   60.]
-    [  59. 5709.   70.   92.   72.   75.   68.   70.   80.   90.]                                                                                                                                                                                                              
-    [  55.   67. 5435.   80.   77.   62.   61.   61.   73.   72.]
-    [  66.   76.   76. 5514.   70.   61.   67.   90.   59.   63.]
-    [  67.   63.   70.   79. 5275.   65.   73.   84.   59.   55.]
-    [  80.   44.   55.   56.   48. 4984.   55.   52.   70.   63.]
-    [  74.   72.   70.   66.   62.   78. 5354.   60.   59.   66.]
-    [  65.   67.   80.   57.   63.   77.   72. 5602.   76.   89.]
-    [  70.   61.   60.   65.   65.   73.   51.   56. 5347.   63.]
-    [  74.   72.   74.   60.   71.   77.   55.   55.   62. 5384.]]
+```
+   [[5365   54   73   61   67   73   66   46   64   60]
+    [  59 5709   70   92   72   75   68   70   80   90]
+    [  55   67 5435   80   77   62   61   61   73   72]
+    [  66   76   76 5514   70   61   67   90   59   63]
+    [  67   63   70   79 5275   65   73   84   59   55]
+    [  80   44   55   56   48 4984   55   52   70   63]
+    [  74   72   70   66   62   78 5354   60   59   66]
+    [  65   67   80   57   63   77   72 5602   76   89]
+    [  70   61   60   65   65   73   51   56 5347   63]
+    [  74   72   74   60   71   77   55   55   62 5384]]
+```
 
 **The greyscale channel distribution of train data almost follows the labels.**
 
@@ -37,8 +39,8 @@ We need to eliminate the influence of unstable feature and so on in model traini
 ### Top 25 test data:
 
 - check `0.npy`, `1.npy`, .... , `24.npy`
-- greyscale data channels: [7 6 9 0 7 8 3 4 6 8 0 7 8 4 1 8 7 4 3 5 8 1 6 7 5]
-- labels (mannual check) : [6 0 5 4 9 9 2 1 9 4 8 7 3 9 7 4 4 4 9 2 5 4 7 6 7]
+- greyscale data channels: `[7 6 9 0 7 8 3 4 6 8 0 7 8 4 1 8 7 4 3 5 8 1 6 7 5]`
+- labels (mannual check) : `[6 0 5 4 9 9 2 1 9 4 8 7 3 9 7 4 4 4 9 2 5 4 7 6 7]`
 
 
 **Obviously, the greyscale channel distribution of test data is different from train data.**
