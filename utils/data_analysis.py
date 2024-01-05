@@ -22,6 +22,22 @@ from multiprocessing import Pool
 
 **The greyscale channel distribution of train data almost follows the labels.**
 
+### Valid data:
+- row index: valid label
+- colomn index: index of valid data file
+- NaN: the valid data file does not exist
+
+ [ 0.  0.  6.  2.  3.  3.  6. nan nan nan nan nan nan nan nan nan]                                                   
+ [ 5.  7.  5.  0.  6.  1.  1.  4.  8.  3. nan nan nan nan nan nan]
+ [ 6.  5.  1.  6.  0.  5.  0.  1. nan nan nan nan nan nan nan nan]
+ [ 0.  6.  4.  2.  6.  3.  6. nan nan nan nan nan nan nan nan nan]
+ [ 9.  0.  3.  7.  2.  0.  7.  1.  7.  3.  6.  4. nan nan nan nan]
+ [ 3.  7.  2.  9.  3.  5.  0.  5.  3.  3.  7.  8. nan nan nan nan]
+ [ 1.  9.  8.  3.  9.  5.  9.  7.  3.  3. nan nan nan nan nan nan]
+ [ 6.  3.  1.  0.  0.  3.  1.  3.  1.  2.  9.  8.  9.  7.  7.  2.]
+ [ 7.  5.  9. nan nan nan nan nan nan nan nan nan nan nan nan nan]
+ [ 7.  5.  9.  9.  8.  4.  4.  9.  1.  5.  7.  2.  5.  2.  3. nan]]
+
 
 ### Top 25 test data:
 
@@ -50,8 +66,8 @@ def resolve_greyscale_channel(file):
     return channel_index[0]
 
 
-def check_data(data_path):
-    data_path = Path(data_path)
+def check_train_data(data_path):
+    data_path = Path(data_path) / 'train'
     count = np.zeros((10, 10))
     for c in tqdm(range(10), position=0, leave=False):
         data_sub_path = data_path / str(c)
@@ -70,6 +86,30 @@ def check_data(data_path):
     print(np.sum(count, axis=0))
     print(np.sum(count, axis=1))
 
+def check_val_data(data_path):
+    data_path = Path(data_path) / 'val'
+
+    files = list(data_path.rglob('*.npy'))
+
+
+    files.sort(key= lambda x: int(x.name.rstrip('.npy')) + int(x.parent.name)  * 1000 )
+
+
+    idx = multi_processes_execute(resolve_greyscale_channel, files, use_tqdm=True)
+
+
+    data = [[] for _ in range(10)]
+    for channel, file in zip(idx, files):
+        data[int(file.parent.name)].append(channel)
+
+    # align the length
+    max_len = max([len(d) for d in data])
+    for d in data:
+        d.extend([np.nan] * (max_len - len(d)))
+    
+    data = np.array(data)
+    print(data)
+
 def check_test_data(data_path, num=25):
     data_path = Path(data_path) / 'test'
 
@@ -86,7 +126,8 @@ def check_test_data(data_path, num=25):
     print(idx)    
 
 if __name__ == '__main__':
-    # check_data('../processed_data/train')
-    check_test_data('../processed_data/')
+    # check_train_data('../processed_data/')
+    # check_test_data('../processed_data/')
+    check_val_data('../processed_data/')
 
 
