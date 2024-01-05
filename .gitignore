@@ -1,4 +1,4 @@
-output/data_vis/*
+output/
 processed_data
 */__pycache__
 __pycache__

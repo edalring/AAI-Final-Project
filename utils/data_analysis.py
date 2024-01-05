@@ -2,6 +2,8 @@ import numpy as np
 from pathlib import Path
 from tqdm import tqdm
 from multiprocessing import Pool
+import shutil
+
 
 '''
 ## Data Analysis for greyscale channel distribution
@@ -69,18 +71,38 @@ def resolve_greyscale_channel(file):
 def check_train_data(data_path):
     data_path = Path(data_path) / 'train'
     count = np.zeros((10, 10))
+
+    label_2_check = 0
+    channel_2_check = 2
+    CHECK_SAVE_ROOT = data_path.parent.parent / 'output' / 'check_vis' / f'label{label_2_check}_channel{channel_2_check}'
+
+    CHECK_SAVE_ROOT.mkdir(parents=True, exist_ok=True)
+
+    PNG_ROOT  = data_path.parent.parent / 'output' / 'data_vis' / 'train' / f'{label_2_check}'
+
+    sample_channels = None
+    sample_files = None
     for c in tqdm(range(10), position=0, leave=False):
         data_sub_path = data_path / str(c)
         files = list(data_sub_path.rglob('*.npy'))
+        files.sort(key= lambda x: int(x.name.rstrip('.npy')) )
+
 
         idx = multi_processes_execute(resolve_greyscale_channel, files, use_tqdm=True)
         idx = np.array(idx)
+
+        if c == label_2_check:
+            sample_channels = idx
+            sample_files = files
 
         # bincount
         for i in range(10):
             count[c, i] = np.sum(idx == i)
 
-        
+    for file, idx in zip(sample_files, sample_channels):
+        if idx == channel_2_check:
+            png_file = PNG_ROOT / file.name.replace('npy', 'png')
+            shutil.copy(png_file, CHECK_SAVE_ROOT / png_file.name)
 
     print(count)
     print(np.sum(count, axis=0))
@@ -126,8 +148,8 @@ def check_test_data(data_path, num=25):
     print(idx)    
 
 if __name__ == '__main__':
-    # check_train_data('../processed_data/')
+    check_train_data('../processed_data/')
     # check_test_data('../processed_data/')
-    check_val_data('../processed_data/')
+    # check_val_data('../processed_data/')
 
 
