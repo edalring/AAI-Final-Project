@@ -64,10 +64,11 @@
   - TOFU中 CNN的 embedding 部分的输出是 300维
   
 - 公式：
-    $$
+  
+$$
 f_Z = \arg \min \sum_{y, E_i \neq E_j} \mathbb{E}_{X_1^\checkmark,X_2^\checkmark,X_3^\times} [L_Z(X_1^\checkmark,X_2^\checkmark,X_3^\times)] \\ 
-L_Z(X_1^\checkmark, X_2^\checkmark,X_3^\times) = \max (0, \delta+ \| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_2^\checkmark) \| _2^2 - \| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_3^\times) \| _2^2 \\
-    $$
+L_Z(X_1^\checkmark, X_2^\checkmark,X_3^\times) = \max (0, \delta+ \| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_2^\checkmark) \| _2^2 - \| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_3^\times) \| _2^2) \\
+$$
 
 - 流程：
   1. 将上述 `N(N-1) * M * 2` 个数据集 分为一对对数据集 `DS_Correct` 和 `DS_Mistake` （一共 N(N-1) * M 对）
