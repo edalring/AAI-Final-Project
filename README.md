@@ -35,6 +35,26 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 **The greyscale channel distribution of train data almost follows the labels.**
 
+### Valid data:
+- row index: valid label
+- colomn index: index of valid data file
+- "-": the valid data file does not exist
+
+```
+[[ 0  0  6  2  3  3  6  -  -  -  -  -  -  -  -  -]                                                
+ [ 5  7  5  0  6  1  1  4  8  3  -  -  -  -  -  -]
+ [ 6  5  1  6  0  5  0  1  -  -  -  -  -  -  -  -]
+ [ 0  6  4  2  6  3  6  -  -  -  -  -  -  -  -  -]
+ [ 9  0  3  7  2  0  7  1  7  3  6  4  -  -  -  -]
+ [ 3  7  2  9  3  5  0  5  3  3  7  8  -  -  -  -]
+ [ 1  9  8  3  9  5  9  7  3  3  -  -  -  -  -  -]
+ [ 6  3  1  0  0  3  1  3  1  2  9  8  9  7  7  2]
+ [ 7  5  9  -  -  -  -  -  -  -  -  -  -  -  -  -]
+ [ 7  5  9  9  8  4  4  9  1  5  7  2  5  2  3  -]]
+```
+
+**Obviously, the greyscale channel distribution of valid data is different from train data.**
+
 
 ### Top 25 test data:
 
