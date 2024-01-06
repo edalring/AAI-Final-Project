@@ -3,6 +3,7 @@ from pathlib import Path
 from tqdm import tqdm
 from multiprocessing import Pool
 import shutil
+import json
 
 
 '''
@@ -147,9 +148,28 @@ def check_test_data(data_path, num=25):
     print(files)
     print(idx)    
 
+def divide_train_dataset(train_data_path):
+    idx_tabel = {}
+    for i in range(10):
+        data_sub_path = Path(train_data_path) / str(i)
+        files = list(data_sub_path.rglob('*.npy'))
+        files.sort(key= lambda x: int(x.name.rstrip('.npy')) )
+        idx = multi_processes_execute(resolve_greyscale_channel, files, use_tqdm=True)
+        idx_tabel.update({str(i):{}})
+        for k in range (10):
+            idx_tabel[str(i)].update({str(k):[]})
+        for channel, file in zip(idx, files):
+            idx_tabel[str(i)][str(channel)].append(file.parent.name+'\\'+file.name)
+
+    with open('./data.json', 'w') as json_file:
+        json.dump(idx_tabel, json_file)
+
+
+
 if __name__ == '__main__':
-    check_train_data('../processed_data/')
+    # check_train_data('../processed_data/')
     # check_test_data('../processed_data/')
     # check_val_data('../processed_data/')
+    divide_train_dataset('../processed_data/train/')
 
 
