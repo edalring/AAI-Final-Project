@@ -219,10 +219,9 @@ class DROTrainer(Trainer):
             cnt_hit = torch.sum(torch.argmax(pred, dim=1) == label).item()
             acc     = cnt_hit / len(label)
 
-            label_dim = label.shape[1]
             pred_dim = pred.shape[1]
             # split by window size self.batch_size
-            labels = label.view(-1, self.batch_size, label_dim)
+            labels = label.view(-1, self.batch_size)
             preds  = pred.view(-1, self.batch_size, pred_dim)
 
             group_size = preds.shape[0]
