@@ -75,6 +75,10 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 
 # Get Started
+## Prepare
+
+- Put your data in <repo>/processed_data, if you obey the default configure
+  - Otherwise, specify your data directory by `--data_path=...` (see [options.py](https://github.com/edalring/AAI-Final-Project/blob/main/options.py))
 
 ## Dependencies
 > Recommanded: use Python virtual environment
@@ -95,13 +99,20 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 ## Options
 
-You can see the options in `options.py`
+You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-Project/blob/main/options.py)
 
 ## Train model
 
-```bash
-python train.py
-```
+- Train model with our methodology for Invariant Feature Learning
+    ```bash
+    python train.py --model_type=[xxx] # vgg by default
+    ```
+- Train model directly (regardless of unstable features)
+    ```bash
+    python train.py --straight_forward --model_type=[xxx] # vgg by default
+    ```
+
+## Data Access
 
 
 - You can see the generated directory `checkpoints`, which save the model parameters, tensorboard logs and training options.
@@ -113,6 +124,8 @@ python train.py
   ```bash
     tensorboard --logdir checkpoints/{model_name}/logs/
   ```
+
+- While training, the train loss / train acc / valid loss / valid acc would be printed out in the console per epoch. You can also use tensorboard to export these data via web UI.
 
 
 

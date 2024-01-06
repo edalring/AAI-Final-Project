@@ -282,7 +282,21 @@ for epoch in range(args.epoch):
 
 #### Environment
 
+- **Hardware**
+  - CPU:
+  - GPU:
+  - Memory:
+- **Software Platform**
+  - Operating System: 
+  - CUDA:
+  - Pytorch:
+  - Python: Python3.8
+
+- **Super Parameters**
+
 #### Dataset
+
+- The modified MNIST dataset provided in [blackblock](https://bb.sustech.edu.cn/bbcswebdav/pid-421015-dt-content-rid-15354260_1/xid-15354260_1)
 
 #### Metrics
 
@@ -292,6 +306,66 @@ for epoch in range(args.epoch):
 
 ## Training Visualization
 > We use tensorboard to visualize the training process.
+
+## How to Reproduce
+
+> See our [repository](https://github.com/edalring/AAI-Final-Project/) to find more details
+
+### Get Started
+
+#### Prepare
+
+- Put your data in <repo>/processed_data, if you obey the default configure
+  - Otherwise, specify your data directory by `--data_path=...` (see [options.py](https://github.com/edalring/AAI-Final-Project/blob/main/options.py))
+
+#### Dependencies
+> Recommanded: use Python virtual environment
+>   ```bash
+>       python -m venv venv
+>       source venv/bin/activate # MacOS/Linux
+>       # venv\Scripts\activate # Windows
+>   ```
+
+- For Windows with cuda
+  ```bash
+  pip install -r requirements_windows_cuda.txt
+  ```
+- For MacOS without cuda
+  ```bash
+  pip install -r requirements_macos.txt
+  ```
+
+#### Options
+
+You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-Project/blob/main/options.py)
+
+#### Train model
+
+- Train model with our methodology for Invariant Feature Learning
+    ```bash
+    python train.py --model_type=[xxx] # vgg by default
+    ```
+- Train model directly (regardless of unstable features)
+    ```bash
+    python train.py --straight_forward --model_type=[xxx] # vgg by default
+    ```
+
+#### Data Access
+
+
+- You can see the generated directory `checkpoints`, which save the model parameters, tensorboard logs and training options.
+  - `checkpoints/{model_name}/[epoch]_[step].pth`: model parameters
+  - `checkpoints/{model_name}/logs/`: tensorboard logs
+  - `checkpoints/{model_name}/args.txt`: training options
+
+- You can utilize the tensorboard logs to visualize the training process.
+  ```bash
+    tensorboard --logdir checkpoints/{model_name}/logs/
+  ```
+
+- While training, the train loss / train acc / valid loss / valid acc would be printed out in the console per epoch. You can also use tensorboard to export these data via web UI.
+
+
 
 ## Contribution
 
