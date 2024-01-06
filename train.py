@@ -294,22 +294,27 @@ def main():
     model = torch_utils.prepare_model(args)
 
     critirion = nn.CrossEntropyLoss()
-    with open('utils/data.json', 'r') as json_file:
-        idx_table = json.load(json_file)
-    data_path ='processed_data'
-    # train_dataset = MNISTDataset(data_path=data_path, mode='train')
-    # trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+   
+    data_path = args.data_path
 
-    trainloader = get_train_loaders(data_path, args.batch_size, idx_table)
+    if args.straight_forward:
 
-    val_dataset = MNISTDataset(data_path=data_path, mode='val', idxs=None)
-    validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+        train_dataset = MNISTDataset(data_path=data_path, mode='train')
+        trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+
+        val_dataset = MNISTDataset(data_path=data_path, mode='val')
+        validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
 
         trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
     else:
         # TODO: fix this
-        trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
+         with open('utils/data.json', 'r') as json_file:
+            idx_table = json.load(json_file)
+            trainloader = get_train_loaders(data_path, args.batch_size, idx_table)
+            val_dataset = MNISTDataset(data_path=data_path, mode='val', idxs=None)
+            validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+            trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
 
     trainer.train()
 
