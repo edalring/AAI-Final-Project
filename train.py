@@ -28,6 +28,7 @@ class Trainer:
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.epochs = args.epochs
+        self.batch_size = args.batch_size
         self.args = args
 
         self.logger = logger.Logger(args)
@@ -104,7 +105,7 @@ class Trainer:
         width = int((np.log10(self.epochs) + 1))
         print(f'Epoch {epoch+1:{width}}/{self.epochs} '
             f'- Train Loss: {average_train_loss:10.8f}\tTrain Acc: {train_accuracy:.2%}'
-            f'\t- Test Loss: {average_val_loss:10.8f}\tTest Acc: {val_accuracy:.2%}')
+            f'\t- Valid Loss: {average_val_loss:10.8f}\tValid Acc: {val_accuracy:.2%}')
 
 
     def step(self, data):
@@ -151,6 +152,131 @@ class Trainer:
             loss = torch.nn.functional.mse_loss(pred, label)
         return loss
 
+class DROTrainer(Trainer):
+    def train_per_epoch(self, epoch):
+        # switch to train mode
+        self.model.train()
+
+        for i, batches in enumerate(zip(*self.train_loader)):
+            X = torch.cat([batch[0] for batch in batches], dim=0)
+            y = torch.cat([batch[1] for batch in batches], dim=0)
+
+            img, pred, label = self.step((X, y))
+            metrics = self.compute_metrics(pred, label, is_train=True)
+
+            
+            # get the item for backward
+            loss = metrics['train/wst_loss']
+
+            # compute gradient and do Adam step
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
+
+            # logger record
+            for key, val in metrics.items():
+                self.logger.record_scalar(key, val)
+
+            # # only save img at first step
+            # if i == len(self.train_loader) - 1:
+            #     self.logger.save_imgs(self.gen_imgs_to_write(img, pred, label, True), epoch)
+
+            # # monitor training progress
+            if i % self.args.print_freq == 0:
+                print('Train: Epoch {}/{} batch {} Loss {}'.format(epoch, self.epochs, i, loss))
+    
+    # # TODO: figure out should we really need this override method? We can directly use the provided valid set
+    # def val_per_epoch(self, epoch):
+    #     self.model.eval()
+
+    #     for i, batches in enumerate(zip(*self.train_loader)):
+    #         X = torch.cat([batch[0] for batch in batches], dim=0)
+    #         y = torch.cat([batch[1] for batch in batches], dim=0)
+
+    #         img, pred, label = self.step((X, y))
+    #         metrics = self.compute_metrics(pred, label, is_train=False)
+
+            
+    #         # get the item for backward
+    #         loss = metrics['train/wst_loss']
+
+    #         # logger record
+    #         for key, val in metrics.items():
+    #             self.logger.record_scalar(key, val)
+
+    #         # # only save img at first step
+    #         # if i == len(self.train_loader) - 1:
+    #         #     self.logger.save_imgs(self.gen_imgs_to_write(img, pred, label, True), epoch)
+
+
+    def compute_metrics(self, pred, label, is_train):
+        # you can call functions in metrics.py
+        # l1 = (pred - gt).abs().mean()
+
+        if is_train:
+            prefix = 'train/'
+            
+            loss    = self.criterion(pred, label)
+            cnt_hit = torch.sum(torch.argmax(pred, dim=1) == label).item()
+            acc     = cnt_hit / len(label)
+
+            label_dim = label.shape[1]
+            pred_dim = pred.shape[1]
+            # split by window size self.batch_size
+            labels = label.view(-1, self.batch_size, label_dim)
+            preds  = pred.view(-1, self.batch_size, pred_dim)
+
+            group_size = preds.shape[0]
+
+            losses = torch.zeros(group_size)
+            cnt_hits = torch.zeros(group_size)
+            for i in range(group_size):
+                losses[i] = self.criterion(preds[i], labels[i])
+                cnt_hits[i] = torch.sum(torch.argmax(pred[i], dim=1) == label[i]).item() / self.batch_size
+            
+            worst_loss = torch.max(losses)
+            worst_acc  = torch.min(cnt_hits)
+            
+
+
+            metrics = {
+                prefix + 'avg_loss': loss,
+                prefix + 'avg_acc': acc,
+                prefix + 'wst_loss': worst_loss,
+                prefix + 'wst_acc': worst_acc,
+            }
+
+            return metrics
+        else:
+            return super.compute_metrics(pred, label, False)
+    
+
+    def print_per_epoch(self, epoch):
+        avg_metric = self.logger.get_average_metric()
+
+
+        average_train_loss = avg_metric['train/avg_loss']
+        train_accuracy     = avg_metric['train/avg_acc']
+        average_val_loss   = avg_metric['val/avg_loss']
+        val_accuracy       = avg_metric['val/avg_acc']
+
+        average_worst_train_loss = avg_metric['train/wst_loss']
+        worst_train_accuracy     = avg_metric['train/wst_acc']
+        average_worst_val_loss   = avg_metric['val/wst_loss']
+        worst_val_accuracy       = avg_metric['val/wst_acc']
+
+        width = int((np.log10(self.epochs) + 1))
+        print(f'Epoch {epoch+1:{width}}/{self.epochs} '
+            f'-       Train Loss: {average_train_loss:10.8f}\t'
+            f'      Train Acc: {train_accuracy:.2%}\t'
+            f'-       Valid Loss: {average_val_loss:10.8f}\t'
+            f'      Valid Acc: {val_accuracy:.2%}')
+        print(f'{"":<{width*2 + 8}}'
+            f'- Worst Train Loss: {average_worst_train_loss:10.8f} \t'
+            f'Worst Train Acc: {worst_train_accuracy:.2%}\t'
+            f'- Worst Valid Loss: {average_worst_val_loss:10.8f}\t'
+            f'Worst Valid Acc: {worst_val_accuracy:.2%}')
+        
 
 def main():
     args = options.prepare_train_args()
