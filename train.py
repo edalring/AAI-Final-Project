@@ -284,14 +284,21 @@ def main():
     critirion = nn.CrossEntropyLoss()
     
     data_path ='processed_data'
-    train_dataset = MNISTDataset(data_path=data_path, mode='train')
-    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
-    val_dataset = MNISTDataset(data_path=data_path, mode='val')
-    validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+    if args.straight_forward:
+
+        train_dataset = MNISTDataset(data_path=data_path, mode='train')
+        trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+
+        val_dataset = MNISTDataset(data_path=data_path, mode='val')
+        validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
 
-    trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
+        trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
+    else:
+        # TODO: fix this
+        trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
+
     trainer.train()
 
 
