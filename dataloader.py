@@ -19,9 +19,11 @@ class MNISTDataset(Dataset):
         self.mode = mode
         self.all_data_paths = list(self.data_root.glob('**/*.npy'))
         # self.label = []
-        self.data_paths = idxs
+        
         if idxs is None:
             self.data_paths = self.all_data_paths
+        else :
+            self.data_paths = list(Path(idx)for idx in idxs) 
 
         
         self.transform = transforms.Compose([
@@ -47,7 +49,7 @@ class MNISTDataset(Dataset):
         return len(self.data_paths)
     
     def __getitem__(self, index):
-        path = self.data_root/self.data_paths[index]
+        path = self.data_paths[index]
         img = self.load_npy_as_tensor(path)
         # print(data)
         # label = self.label[index]
