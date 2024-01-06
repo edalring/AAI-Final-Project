@@ -160,7 +160,6 @@ class DROTrainer(Trainer):
         for i, batches in enumerate(zip(*self.train_loader)):
             X = torch.cat([batch[0] for batch in batches], dim=0)
             y = torch.cat([batch[1] for batch in batches], dim=0)
-
             img, pred, label = self.step((X, y))
             metrics = self.compute_metrics(pred, label, is_train=True)
 
@@ -277,6 +276,16 @@ class DROTrainer(Trainer):
             f'- Worst Valid Loss: {average_worst_val_loss:10.8f}\t'
             f'Worst Valid Acc: {worst_val_accuracy:.2%}')
         
+def get_train_loaders(path, batch_size):
+    train_loaders = []
+    for idx in range(10):
+        train_loaders.append(create_dataloader_by_idx(path, idx, batch_size))
+    return train_loaders
+
+
+def create_dataloader_by_idx(path, idx, batch_size):
+    dataset = MNISTDataset(data_path=path, mode='train', env_id=idx)
+    return torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=True)
 
 def main():
     args = options.prepare_train_args()
@@ -285,14 +294,17 @@ def main():
     critirion = nn.CrossEntropyLoss()
     
     data_path ='processed_data'
-    train_dataset = MNISTDataset(data_path=data_path, mode='train')
-    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+    # train_dataset = MNISTDataset(data_path=data_path, mode='train')
+    # trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+
+    trainloader = get_train_loaders(data_path, args.batch_size)
 
     val_dataset = MNISTDataset(data_path=data_path, mode='val')
     validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
 
-    trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
+    # trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
+    trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
     trainer.train()
 
 

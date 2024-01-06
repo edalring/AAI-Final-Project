@@ -3,10 +3,11 @@ from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 import torch
 from pathlib import Path
+from utils.data_analysis import resolve_greyscale_channel
 from utils.torch_utils import load_npy_as_ndarray, multi_processes_execute
 
 class MNISTDataset(Dataset):
-    def __init__(self, data_path, mode):
+    def __init__(self, data_path, mode, env_id=None):
         self.data_root = Path(data_path) / mode
 
         if not self.data_root.exists():
@@ -14,11 +15,18 @@ class MNISTDataset(Dataset):
             print(f'Dataset {self.data_root} does not exist!')
             exit(1)
 
-
-        self.mode = mode
-        # self.label = []
         
-        self.data_paths = list(self.data_root.glob('**/*.npy'))
+        self.mode = mode
+        self.all_data_paths = list(self.data_root.glob('**/*.npy'))
+        # self.label = []
+        self.data_paths = []
+        if env_id is None:
+            self.data_paths = self.all_data_paths
+        else:
+            for item in self.all_data_paths:
+                if resolve_greyscale_channel(item) == env_id:
+                    self.data_paths.append(item)
+
         
         self.transform = transforms.Compose([
                 transforms.ToTensor(),
@@ -38,7 +46,7 @@ class MNISTDataset(Dataset):
         return torch.transpose(img, 0, 1) 
         
         # return load_npy_as_ndarray(path)
-
+    
     def __len__(self):
         return len(self.data_paths)
     
