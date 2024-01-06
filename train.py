@@ -74,8 +74,8 @@ class Trainer:
             #     self.logger.save_imgs(self.gen_imgs_to_write(img, pred, label, True), epoch)
 
             # # monitor training progress
-            # if i % self.args.print_freq == 0:
-            #     print('Train: Epoch {}/{} batch {} Loss {}'.format(epoch, self.epochs, i, loss))
+            if i % self.args.print_freq == 0:
+                print('Train: Epoch {}/{} batch {} Loss {}'.format(epoch, self.epochs, i, loss))
 
 
 
@@ -160,10 +160,10 @@ def main():
     
     data_path ='processed_data'
     train_dataset = MNISTDataset(data_path=data_path, mode='train')
-    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
+    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
     val_dataset = MNISTDataset(data_path=data_path, mode='val')
-    validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True)
+    validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
 
     trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
