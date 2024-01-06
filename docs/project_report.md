@@ -309,7 +309,7 @@ for epoch in range(args.epoch):
 
 ## How to Reproduce
 
-> See our [repository](https://github.com/edalring/AAI-Final-Project/) to find more details
+> Access our [repository](https://github.com/edalring/AAI-Final-Project/) to get more details
 
 ### Get Started
 
