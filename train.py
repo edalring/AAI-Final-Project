@@ -1,3 +1,4 @@
+import json
 import torch
 import torchvision.transforms as transforms
 import torch.nn as nn
@@ -14,6 +15,7 @@ from torch.autograd import Variable
 from utils import logger
 from utils import torch_utils
 import options
+
 
 
 
@@ -230,7 +232,7 @@ class DROTrainer(Trainer):
             cnt_hits = torch.zeros(group_size)
             for i in range(group_size):
                 losses[i] = self.criterion(preds[i], labels[i])
-                cnt_hits[i] = torch.sum(torch.argmax(pred[i], dim=1) == label[i]).item() / self.batch_size
+                cnt_hits[i] = torch.sum(torch.argmax(preds[i], dim=1) == label[i]).item() / self.batch_size
             
             worst_loss = torch.max(losses)
             worst_acc  = torch.min(cnt_hits)
@@ -275,15 +277,16 @@ class DROTrainer(Trainer):
             f'- Worst Valid Loss: {average_worst_val_loss:10.8f}\t'
             f'Worst Valid Acc: {worst_val_accuracy:.2%}')
         
-def get_train_loaders(path, batch_size):
+def get_train_loaders(path, batch_size, idx_table):
     train_loaders = []
-    for idx in range(10):
-        train_loaders.append(create_dataloader_by_idx(path, idx, batch_size))
+    for label_idx in range(10):
+        for channel_idx in range(10):
+            train_loaders.append(create_dataloader_by_idx(path, int(batch_size/100), idx_table[str(label_idx)][str(channel_idx)]))
     return train_loaders
 
 
-def create_dataloader_by_idx(path, idx, batch_size):
-    dataset = MNISTDataset(data_path=path, mode='train', env_id=idx)
+def create_dataloader_by_idx(path, batch_size, idxs):
+    dataset = MNISTDataset(data_path=path, mode='train', idxs=idxs)
     return torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=True)
 
 def main():
@@ -291,14 +294,15 @@ def main():
     model = torch_utils.prepare_model(args)
 
     critirion = nn.CrossEntropyLoss()
-    
+    with open('utils/data.json', 'r') as json_file:
+        idx_table = json.load(json_file)
     data_path ='processed_data'
     # train_dataset = MNISTDataset(data_path=data_path, mode='train')
     # trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
-    trainloader = get_train_loaders(data_path, args.batch_size)
+    trainloader = get_train_loaders(data_path, args.batch_size, idx_table)
 
-    val_dataset = MNISTDataset(data_path=data_path, mode='val')
+    val_dataset = MNISTDataset(data_path=data_path, mode='val', idxs=None)
     validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
 
