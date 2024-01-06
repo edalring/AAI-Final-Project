@@ -10,13 +10,13 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 - Input: modified MNIST images
   - add noise : assign wrong label to some images
-  - add extra unstable/unrelated channels: $28 * 28$ -> $10 * 28 * 28$
+  - add extra unstable/unrelated channels: $28 \times 28$ -> $10 \times 28 \times 28$
     - The real greyscale channel may be one of the 10 channels, others channels are filled with 0s
     - For example, for some training data, the grayscale channel is the first channel, while the grayscale channel in other test data is the seventh channel (of course, it may also be other channel)
 - Output: the correct label of the image
 
 ## Data Analysis for greyscale channel distribution
-### Train data:
+### Train Data:
 - row index: train label
 - colomn index: channel index of greyscale data
 - data[i,j] : the number of train data with label i and greyscale channel j
@@ -36,7 +36,7 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 **The greyscale channel distribution of train data almost follows the labels.**
 
-### Valid data:
+### Valid Data:
 - row index: valid label
 - colomn index: index of valid data file
 - "-": the valid data file does not exist
@@ -58,11 +58,17 @@ We need to eliminate the influence of unstable feature and so on in model traini
 **Obviously, the greyscale channel distribution of valid data is different from train data.**
 
 
-### Top 25 test data:
+### Test Data:
+- Greyscale channel distribution of test data is uniform.
+  - `greyscale_channel_count[i]` : the number of test data with greyscale channel `i`
+  ```Python
+  greyscale_channel_count = [935 1037  980  989 1028 1018  946  983 1013  971]
+  ```
 
-- check `0.npy`, `1.npy`, .... , `24.npy`
-- greyscale data channels: `[7 6 9 0 7 8 3 4 6 8 0 7 8 4 1 8 7 4 3 5 8 1 6 7 5]`
-- labels (mannual check) : `[6 0 5 4 9 9 2 1 9 4 8 7 3 9 7 4 4 4 9 2 5 4 7 6 7]`
+- Top 25 test data
+  - check `0.npy`, `1.npy`, .... , `24.npy`
+  - greyscale data channels: `[7 6 9 0 7 8 3 4 6 8 0 7 8 4 1 8 7 4 3 5 8 1 6 7 5]`
+  - labels (mannual check) : `[6 0 5 4 9 9 2 1 9 4 8 7 3 9 7 4 4 4 9 2 5 4 7 6 7]`
 
 
 **Obviously, the greyscale channel distribution of test data is different from train data.**
@@ -126,6 +132,13 @@ python train.py
 - [paperwithcode](https://paperswithcode.com/sota/image-classification-on-mnist)
 - [Reasonable Doubt: Get Onto the Top 35 MNIST Leaderboard by Quantifying Aleatoric Uncertainty](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html#4d4e495354)
  
+
+## Repository
+
+- [Tofu](https://github.com/YujiaBao/Tofu): The code for this work "Learning stable classifiers by transferring unstable features."
+- [ExquisiteNetV2](https://github.com/shyhyawJou/ExquisiteNetV2/tree/main): one of the SOTA small model for MNIST (99.71% acc with 518230 params, ref:  [paperwithcode](https://paperswithcode.com/sota/image-classification-on-mnist))
+
+
 
 ## Papers
 
