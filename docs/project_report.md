@@ -183,9 +183,10 @@ $$
      - Insight: Properly classified data is more likely to have similar unstable features, while misclassified data is more likely to have different unstable features
        - It's the unstable feature difference that cause misclassification.
   
-     - Therefore, for each classification,
-​       - Make embeddings of correctly classified data as close as possible: Here, the loss function is defined as $\| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_2^\checkmark) \|^2_2$
-​       - Make embeddings of misclassified data and correctly classified data as far apart as possible: Here, the loss function is defined as $\delta - \| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_3^\times) \| _2^2$
+     - Therefore, for each classification result of sampled data.
+       -  Make embeddings of correctly classified data as close as possible: Here, the loss function is defined as $\| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_2^\checkmark) \|^2_2$
+       -  Make embeddings of misclassified data and correctly classified data as far apart as possible: Here, the loss function is defined as $\delta - \| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_3^\times) \| _2^2$
+       -  Combine the 2 two loss function, consequently we can make those embedings with similar unstable feature distribution as near as possible, and  make those embedings with different unstable feature distribution as far as possible
   
 
 - Training code (For detailed code, see https://github.com/YujiaBao/tofu/blob/main/src/tofu/partition.py)
