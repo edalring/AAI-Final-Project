@@ -138,6 +138,16 @@ def check_test_data(data_path, num=25):
     files = list(data_path.iterdir())
     files.sort(key= lambda x: int(x.name.rstrip('.npy')))
 
+    idx = multi_processes_execute(resolve_greyscale_channel, files, use_tqdm=True)
+
+
+    count = np.zeros(10)
+    for i in range(10):
+        count[i] = np.sum(np.array(idx) == i)
+    
+    print(count)
+
+
     files = files[:num]
 
     idx = multi_processes_execute(resolve_greyscale_channel, files, use_tqdm=True)
@@ -147,9 +157,11 @@ def check_test_data(data_path, num=25):
     print(files)
     print(idx)    
 
+
+
 if __name__ == '__main__':
-    check_train_data('../processed_data/')
-    # check_test_data('../processed_data/')
+    # check_train_data('../processed_data/')
+    check_test_data('../processed_data/')
     # check_val_data('../processed_data/')
 
 
