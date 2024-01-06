@@ -341,7 +341,7 @@ for epoch in range(args.epoch):
 
 You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-Project/blob/main/options.py)
 
-#### Train model
+#### Train Model
 
 - Train model with our methodology for Invariant Feature Learning
     ```bash
@@ -352,10 +352,14 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
     python train.py --straight_forward --model_type=[xxx] # vgg by default
     ```
 
+### Test Model
+
+// TODO
+
 #### Data Access
 
 
-- You can see the generated directory `checkpoints`, which save the model parameters, tensorboard logs and training options.
+- You can see the generated directory `checkpoints` after training, which save the model parameters, tensorboard logs and training options.
   - `checkpoints/{model_name}/[epoch]_[step].pth`: model parameters
   - `checkpoints/{model_name}/logs/`: tensorboard logs
   - `checkpoints/{model_name}/args.txt`: training options

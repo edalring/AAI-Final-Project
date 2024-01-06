@@ -101,7 +101,7 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-Project/blob/main/options.py)
 
-## Train model
+## Train Model
 
 - Train model with our methodology for Invariant Feature Learning
     ```bash
@@ -111,6 +111,10 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
     ```bash
     python train.py --straight_forward --model_type=[xxx] # vgg by default
     ```
+
+### Test Model
+
+// TODO
 
 ## Data Access
 
