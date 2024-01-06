@@ -283,7 +283,7 @@ def main():
 
     critirion = nn.CrossEntropyLoss()
     
-    data_path ='processed_data'
+    data_path = args.data_path
 
     if args.straight_forward:
 
