@@ -309,12 +309,12 @@ def main():
         trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
     else:
         # TODO: fix this
-         with open('utils/data.json', 'r') as json_file:
+        with open('utils/data.json', 'r') as json_file:
             idx_table = json.load(json_file)
-            trainloader = get_train_loaders(data_path, args.batch_size, idx_table)
-            val_dataset = MNISTDataset(data_path=data_path, mode='val', idxs=None)
-            validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
-            trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
+        trainloader = get_train_loaders(data_path, args.batch_size, idx_table)
+        val_dataset = MNISTDataset(data_path=data_path, mode='val', idxs=None)
+        validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+        trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
 
     trainer.train()
 
