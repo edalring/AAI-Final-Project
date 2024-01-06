@@ -3,6 +3,7 @@ import os
 
 
 def parse_common_args(parser):
+    parser.add_argument('--data_path', type=str, default='./processed_data', help='the directory in which the data locate')
     parser.add_argument('--model_type', type=str, default='vgg', help='used in model_entry.py')
     parser.add_argument('--data_type', type=str, default='base_dataset', help='used in data_entry.py')
     parser.add_argument('--save_prefix', type=str, default='pref', help='some comment for model or test result dir')
@@ -30,6 +31,7 @@ def parse_train_args(parser):
     parser.add_argument('--batch_size', type=int, default=200)
     parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--print_freq', type=int, default=10)
+    parser.add_argument('--straight_forward', type=bool, default=False)
     return parser
 
 
