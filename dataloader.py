@@ -7,7 +7,7 @@ from utils.data_analysis import resolve_greyscale_channel
 from utils.torch_utils import load_npy_as_ndarray, multi_processes_execute
 
 class MNISTDataset(Dataset):
-    def __init__(self, data_path, mode, env_id=None):
+    def __init__(self, data_path, mode, idxs):
         self.data_root = Path(data_path) / mode
 
         if not self.data_root.exists():
@@ -19,13 +19,9 @@ class MNISTDataset(Dataset):
         self.mode = mode
         self.all_data_paths = list(self.data_root.glob('**/*.npy'))
         # self.label = []
-        self.data_paths = []
-        if env_id is None:
+        self.data_paths = idxs
+        if idxs is None:
             self.data_paths = self.all_data_paths
-        else:
-            for item in self.all_data_paths:
-                if resolve_greyscale_channel(item) == env_id:
-                    self.data_paths.append(item)
 
         
         self.transform = transforms.Compose([
@@ -51,7 +47,7 @@ class MNISTDataset(Dataset):
         return len(self.data_paths)
     
     def __getitem__(self, index):
-        path = self.data_paths[index]
+        path = self.data_root/self.data_paths[index]
         img = self.load_npy_as_tensor(path)
         # print(data)
         # label = self.label[index]
