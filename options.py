@@ -29,6 +29,7 @@ def parse_train_args(parser):
     parser.add_argument('--train_list', type=str, default='/data/dataset1/list/base/train.txt')
     parser.add_argument('--batch_size', type=int, default=200)
     parser.add_argument('--epochs', type=int, default=100)
+    parser.add_argument('--print_freq', type=int, default=10)
     return parser
 
 
