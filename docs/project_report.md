@@ -479,6 +479,8 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 
 ## Contribution
 
+> Access our [repository commit history](https://github.com/edalring/AAI-Final-Project/commits/main/) to get more details
+
 - 陈昆秋(50%)：
   - Data Analysis
   - Skeleton/model Code
