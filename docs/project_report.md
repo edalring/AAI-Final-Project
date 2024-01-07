@@ -422,6 +422,13 @@ We separately conducted straight fortward training and training with invariant f
   pip install -r requirements_macos.txt
   ```
 
+
+- Of course, you can install the dependencies mannually
+  - Pytorch: refer to https://pytorch.org/
+  - tqdm: `pip install tqdm`
+  - tensorboard: `pip install tensorboard`
+  - matplotlib: `pip install matplotlib`
+
 #### Options
 
 You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-Project/blob/main/options.py)

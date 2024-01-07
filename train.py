@@ -157,6 +157,15 @@ class Trainer:
         return loss
 
 class DROTrainer(Trainer):
+    '''
+    DRO trainer: the implementation of this trainer is referred from Tofu: https://github.com/YujiaBao/tofu/blob/main/src/tofu/utils.py#L41
+
+    Note that, the constructor of DROTrainer need a list of train loaders as augment `train_loader`
+    - Assume we have N train loaders, which means we would train the model in N clusters of data in different environments and labels
+    - In each batch of training, we can get N losses of the N batches of data coming from the N data loaders
+    - DRO trainer just select the worst loss among the N losess to do backward propagation.
+    '''
+
     def train_per_epoch(self, epoch):
         # switch to train mode
         self.model.train()
@@ -188,23 +197,6 @@ class DROTrainer(Trainer):
             if i % self.args.print_freq == 0:
                 print('Train: Epoch {}/{} batch {} Loss {}'.format(epoch, self.epochs, i, loss))
     
-    def val_per_epoch(self, epoch):
-        self.model.eval()
-        for i, data in enumerate(self.val_loader):
-            img, pred, label = self.step(data)
-            metrics = self.compute_metrics(pred, label, is_train=False)
-
-            
-            # get the item for backward
-            # loss = metrics['train/wst_loss']
-
-            # logger record
-            for key, val in metrics.items():
-                self.logger.record_scalar(key, val)
-
-            # # only save img at first step
-            # if i == len(self.train_loader) - 1:
-            #     self.logger.save_imgs(self.gen_imgs_to_write(img, pred, label, True), epoch)
 
 
     def compute_metrics(self, pred, label, is_train):
@@ -262,7 +254,6 @@ class DROTrainer(Trainer):
     def print_per_epoch(self, epoch):
         avg_metric = self.logger.get_average_metric()
 
-        print(avg_metric)
         average_train_loss = avg_metric['train/avg_loss']
         train_accuracy     = avg_metric['train/avg_acc']
         average_val_loss   = avg_metric['val/avg_loss']

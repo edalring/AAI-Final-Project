@@ -88,6 +88,7 @@ We need to eliminate the influence of unstable feature and so on in model traini
 >       # venv\Scripts\activate # Windows
 >   ```
 
+
 - For Windows with cuda
   ```bash
   pip install -r requirements_windows_cuda118.txt
@@ -99,6 +100,12 @@ We need to eliminate the influence of unstable feature and so on in model traini
   ```bash
   pip install -r requirements_macos.txt
   ```
+
+- Of course, you can install the dependencies mannually
+  - Pytorch: refer to https://pytorch.org/
+  - tqdm: `pip install tqdm`
+  - tensorboard: `pip install tensorboard`
+  - matplotlib: `pip install matplotlib`
 
 ## Options
 
