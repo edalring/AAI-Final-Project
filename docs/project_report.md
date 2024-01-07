@@ -389,6 +389,9 @@ We separately conducted straight fortward training and training with invariant f
   ```bash
   pip install -r requirements_windows_cuda118.txt
   ```
+
+(Note: The example specifies dependencies for hardware CUDA version 11.8. The specific PyTorch version should be downloaded from the PyTorch official website according to the actual situation. See more details: https://pytorch.org/)
+
 - For MacOS without cuda
   ```bash
   pip install -r requirements_macos.txt
