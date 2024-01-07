@@ -169,7 +169,7 @@ def divide_train_dataset(train_data_path):
         for k in range (10):
             idx_tabel[str(i)].update({str(k):[]})
         for channel, file in zip(idx, files):
-            idx_tabel[str(i)][str(channel)].append(file.parent.name+'\\'+file.name)
+            idx_tabel[str(i)][str(channel)].append('processed_data\\train\\'+file.parent.name+'\\'+file.name)
 
     with open('./data.json', 'w') as json_file:
         json.dump(idx_tabel, json_file)
