@@ -480,11 +480,15 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 ## Contribution
 
 - 陈昆秋(50%)：
+  - Data Analysis
+  - Skeleton/model Code
   - Backgroud Research 
-  - Training Design
+  - Methodology Design
   - Report Writing
 - 周一凡(50%)：
-  - Data Process
+  - Data Analysis
+  - Model Code
+  - Data Processing
   - Experiment
   - Report Writing
 
