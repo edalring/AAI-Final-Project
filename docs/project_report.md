@@ -327,6 +327,16 @@ Where:
 
 ### Results
 
+We separately conducted straight fortward training and training with invariant feature learning method for each model. Eventually, we compiled the best-performing models (base on the accuracy) during the training process for each model, and recorded the average loss value and accuracy of these models on the validation set. The specific results are shown in the table below.
+
+|     Model      | Avg-Loss (Straight Forward) | Acc(Straight Forward) | Avg-Loss (Invariant Feature Learning) | Acc(Invariant Feature Learning) |
+| :------------: | :-------------------------: | :-------------------: | :-----------------------------------: | :-----------------------------: |
+|      VGG       |            6.857            |         0.280         |                 1.230                 |              0.760              |
+|      CNN       |            4.208            |         0.270         |                 1.318                 |              0.730              |
+| ExquisiteNetV2 |            6.012            |         0.310         |                 3.345                 |              0.640              |
+
+
+
 ## Training Visualization
 > We use tensorboard to visualize the training process.
 
@@ -375,7 +385,13 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 
 ### Test Model
 
-// TODO
+- Test model on the test set to output prediction file
+
+  ```bash
+  python test.py --load_model_path=[saved model path]
+  ```
+
+  
 
 #### Data Access
 
