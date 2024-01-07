@@ -54,7 +54,7 @@ class MNISTDataset(Dataset):
         # print(data)
         # label = self.label[index]
         if self.mode == 'test':
-            return img, 0   
+            return img, path.name   
         else:
             label = int(path.parent.name)
 

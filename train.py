@@ -12,6 +12,7 @@ import numpy as np
 import torch.nn.functional as F
 import torch.utils.data
 from torch.autograd import Variable
+from test import Tester
 
 from utils import logger
 from utils import torch_utils
@@ -192,7 +193,6 @@ class DROTrainer(Trainer):
     # #      and avg_acc
     def val_per_epoch(self, epoch):
         self.model.eval()
-
         for i, data in enumerate(self.val_loader):
             img, pred, label = self.step(data)
             metrics = self.compute_metrics(pred, label, is_train=False)
@@ -333,7 +333,15 @@ def main():
         validloader = torch.utils.data.DataLoader(val_dataset, len(val_dataset), shuffle=True, pin_memory=True)
         trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
 
+        
+
     trainer.train()
+
+    test_dataset = MNISTDataset(data_path=args.data_path, mode='test')
+    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=200, shuffle=True, pin_memory=True)
+    tester = Tester(args, model, testloader)
+    tester.test()
+    print('test_pass!')
 
 
 if __name__ == '__main__':
