@@ -286,7 +286,11 @@ for epoch in range(args.epoch):
 - **Hardware**
   - CPU: 12th Gen Intel(R) Core(TM) i9-12900K
   - GPU: NVIDIA GeForce RTX 3090
-  - Memory: 32G
+  - Memory: 32G, DDR4, 4000MHz
+  - L1 Cache: 1.4 MB
+	- L2 Cache:	14.0 MB
+	- L3 Cache:	30.0 MB
+
 - **Software Platform**
   - Operating System: Windows
   - CUDA: 12.2
