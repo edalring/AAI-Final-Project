@@ -375,6 +375,8 @@ We separately conducted straight fortward training and training with invariant f
 |      CNN       |            4.208            |         0.270         |                 1.318                 |              0.730              |
 | ExquisiteNetV2 |            6.012            |         0.310         |                 3.345                 |              0.640              |
 
+From the results, we can conclude that under the Invariant Feature Learning method, all three models achieved better results on the final validation set than the straight forward trainning. Additionally, upon manual inspection of 100 validation data points, 23 were identified as noisy data. This implies that theoretically, the accuracy of the optimal model on this validation set would be 0.77, while the accuracy of our best-performing model during training was 0.76, which is  very close to the optimal.
+
 
 
 ## Training Visualization
