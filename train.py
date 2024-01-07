@@ -188,9 +188,6 @@ class DROTrainer(Trainer):
             if i % self.args.print_freq == 0:
                 print('Train: Epoch {}/{} batch {} Loss {}'.format(epoch, self.epochs, i, loss))
     
-    # # TODO: figure out should we really need this override method? We can directly use the provided valid set
-    # # FIX: use the val_loader directly, since the valid set is not divide. Only need to calculate the avg_loss
-    # #      and avg_acc
     def val_per_epoch(self, epoch):
         self.model.eval()
         for i, data in enumerate(self.val_loader):
@@ -271,23 +268,12 @@ class DROTrainer(Trainer):
         average_val_loss   = avg_metric['val/avg_loss']
         val_accuracy       = avg_metric['val/avg_acc']
 
-        # TODO: There is no wst_loss and wst/acc, maybe we don't need it?
-        # average_worst_train_loss = avg_metric['train/wst_loss']
-        # worst_train_accuracy     = avg_metric['train/wst_acc']
-        # average_worst_val_loss   = avg_metric['val/wst_loss']
-        # worst_val_accuracy       = avg_metric['val/wst_acc']
-
         width = int((np.log10(self.epochs) + 1))
         print(f'Epoch {epoch+1:{width}}/{self.epochs} '
             f'-       Train Loss: {average_train_loss:10.8f}\t'
             f'      Train Acc: {train_accuracy:.2%}\t'
             f'-       Valid Loss: {average_val_loss:10.8f}\t'
             f'      Valid Acc: {val_accuracy:.2%}')
-        # print(f'{"":<{width*2 + 8}}'
-        #     f'- Worst Train Loss: {average_worst_train_loss:10.8f} \t'
-        #     f'Worst Train Acc: {worst_train_accuracy:.2%}\t'
-        #     f'- Worst Valid Loss: {average_worst_val_loss:10.8f}\t'
-        #     f'Worst Valid Acc: {worst_val_accuracy:.2%}')
         
 def get_train_loaders(path, batch_size, idx_table):
     train_loaders = []
@@ -321,11 +307,6 @@ def main():
 
         trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
     else:
-        # TODO: fix this
-        # FIX: train step for diiferent envs:
-        #      1. load the idx infomation from json file
-        #      2. prepare train loaders: totally 10(class num)*10(env num) = 100 dataloader
-        #      3. prepare validloader: since the valid set is small, set batch_size = length of valid set
         with open('utils/data.json', 'r') as json_file:
             idx_table = json.load(json_file)
         trainloader = get_train_loaders(data_path, args.batch_size, idx_table)
