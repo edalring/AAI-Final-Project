@@ -325,6 +325,24 @@ Where:
 
 #### Baseline
 
+The baseline experiment encompasses three fundamental models: VGG, CNN, and ExquisiteNetV2, employed for a classification task. Each model serves as a benchmark in evaluating the performance of novel architectures or techniques.
+
+Model Selection and Adaptation
+
+The selected models—VGG, CNN, and ExquisiteNetV2—were chosen for their diverse architectural designs and historical efficacy in image classification tasks. It's essential to note that the model parameters were adjusted and fine-tuned according to the specificities of the dataset and task at hand. This adaptation aimed to optimize the models' performance and ensure fair comparisons among them.
+
+`VGG`
+
+The VGG architecture, renowned for its depth and simplicity, was adapted by modifying the number of layers and channel configurations to suit the dataset characteristics.
+
+`CNN`
+
+The CNN model, with its convolutional layers, pooling operations, and fully connected layers, underwent parameter tuning to align its capacity with the complexity of the classification task.
+
+`ExquisiteNetV2`
+
+ExquisiteNetV2, a sophisticated architecture known for its intricate design and improved performance, was tailored by adjusting various architectural components and hyperparameters to ensure compatibility with the dataset.
+
 ### Results
 
 We separately conducted straight fortward training and training with invariant feature learning method for each model. Eventually, we compiled the best-performing models (base on the accuracy) during the training process for each model, and recorded the average loss value and accuracy of these models on the validation set. The specific results are shown in the table below.
@@ -339,6 +357,8 @@ We separately conducted straight fortward training and training with invariant f
 
 ## Training Visualization
 > We use tensorboard to visualize the training process.
+
+![image-20240107165449037](./pics/training_visualization.png)
 
 ## How to Reproduce
 
