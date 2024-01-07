@@ -188,7 +188,6 @@ $$
        -  Make embeddings of misclassified data and correctly classified data as far apart as possible: Here, the loss function is defined as $\delta - \| \overline{f_Z}(X_1^\checkmark) -\overline{f_Z}(X_3^\times) \| _2^2$
        -  Combine the 2 two loss function, consequently we can make those embedings with similar unstable feature distribution as near as possible, and  make those embedings with different unstable feature distribution as far as possible
   
-
 - Training code (For detailed code, see https://github.com/YujiaBao/tofu/blob/main/src/tofu/partition.py)
 ```Python
 for epoch in range(args.epoch):
@@ -285,13 +284,13 @@ for epoch in range(args.epoch):
 #### Environment
 
 - **Hardware**
-  - CPU:
-  - GPU:
-  - Memory:
+  - CPU: 12th Gen Intel(R) Core(TM) i9-12900K
+  - GPU: NVIDIA GeForce RTX 3090
+  - Memory: 32G
 - **Software Platform**
-  - Operating System: 
-  - CUDA:
-  - Pytorch:
+  - Operating System: Windows
+  - CUDA: 12.2
+  - Pytorch: 2.1.2+cu121
   - Python: Python3.8
 
 - **Super Parameters**
@@ -301,6 +300,28 @@ for epoch in range(args.epoch):
 - The modified MNIST dataset provided in [blackblock](https://bb.sustech.edu.cn/bbcswebdav/pid-421015-dt-content-rid-15354260_1/xid-15354260_1)
 
 #### Metrics
+
+In this project,  two fundamental metrics  **Average Accuracy** and **Average Loss** are used.
+
+##### Average Accuracy
+
+**Average Accuracy** measures the proportion of correctly predicted instances across all classes in the dataset. It is calculated by dividing the total number of correct predictions by the total number of predictions made. The formula is:
+
+$$Average Accuracy= \frac{Number of Correct Predictions}{Total Number of Predictions}$$
+
+This metric provides an overall view of the model's ability to correctly classify instances across different classes.
+
+##### Average Loss
+
+**Average Loss** is a measure of the model's error or discrepancy between predicted and true values. In the project, we took the `Cross Entropy Loss` as our critirion. The formula is:
+
+$$Cross Entropy Loss = -\frac{1}{N} \sum_{i=1}^{N} \sum_{j=1}^{C} y_{ij} \log(p_{ij})$$
+
+Where:
+- \($N$\) is the total number of samples.
+- \($C$\) is the number of classes.
+- \($y_{ij}$\) is an indicator function that is 1 if the sample \(i\) belongs to class \(j\), and 0 otherwise.
+- \($p_{ij}$\) is the predicted probability of sample \(i\) belonging to class \(j\).
 
 #### Baseline
 
@@ -396,7 +417,7 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 
 - [paperwithcode](https://paperswithcode.com/sota/image-classification-on-mnist)
 - [Reasonable Doubt: Get Onto the Top 35 MNIST Leaderboard by Quantifying Aleatoric Uncertainty](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html#4d4e495354)
- 
+
 
 ### Repository
 
