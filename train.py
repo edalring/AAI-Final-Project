@@ -157,6 +157,15 @@ class Trainer:
         return loss
 
 class DROTrainer(Trainer):
+    '''
+    DRO trainer: the implementation of this trainer is referred from Tofu: https://github.com/YujiaBao/tofu/blob/main/src/tofu/utils.py#L41
+
+    Note that, the constructor of DROTrainer need a list of train loaders as augment `train_loader`
+    - Assume we have N train loaders, which means we would train the model in N clusters of data in different environments and labels
+    - In each batch of training, we can get N losses of the N batches of data coming from the N data loaders
+    - DRO trainer just select the worst loss among the N losess to do backward propagation.
+    '''
+
     def train_per_epoch(self, epoch):
         # switch to train mode
         self.model.train()
