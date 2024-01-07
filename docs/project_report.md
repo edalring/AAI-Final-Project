@@ -109,13 +109,13 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 #### 1. Identify spurious correlations from the source tasks
 
-- Input: `N` different environments (TOFU's MNIST dataset only provided 2 environments)
-- Output: `N(N-1) * M * 2` datasets
-  - `N`: Number of environments
-  - `N-1`: Number of classifiers trained in other environments
-  - `M`: Number of classes in the classification task
-  - `2`: For classification error or correctness
-- Example (`N=2`): 
+- Input: $N$ different environments (TOFU's MNIST dataset only provided 2 environments)
+- Output: $N \times (N-1) \times M \times 2$ datasets
+  - $N$: Number of environments
+  - $N-1$: Number of classifiers trained in other environments
+  - $M$: Number of classes in the classification task
+  - $2$: For classification error or correctness
+- Example ($N=2, M=2$): 
     ```
     ENV_e0_LABEL_y0_correct
     ENV_e0_LABEL_y0_mistake
@@ -127,7 +127,7 @@ We need to eliminate the influence of unstable feature and so on in model traini
     ENV_e1_LABEL_y1_mistake
     ```
 - Process
-  1. Train `N` classifier models on `N` environments
+  1. Train $N$ classifier models on $N$ environments
   2. For each environment, collect classification results of other classifiers, divide into new datasets based on each label and correctness
 
 - Pseudocode
@@ -289,7 +289,10 @@ In our dataset, there is no distinction among different environments with unstab
 
 Therefore, we skip directly to the third step in TOFU, by passing the first and second steps, manually dividing the different clusters (different environments), and proceeding directly to balanced training.
 
-In our approach, we directly cluster the data within each class in the training dataset based on grayscale's channel (totally 10x10 = 100 clusters). Moreover, in each epoch of training, we ensure that an equal amount of data from each cluster is trained by the model. And we adopted a strategy of random resampling to balance the data.  For more details, see   [TOFU Trainning](https://github.com/edalring/AAI-Final-Project/blob/main/docs/project_report.md#3-transfer-the-unstable-feature-to-the-target-task)and our trainner [DROTrainer](https://github.com/edalring/AAI-Final-Project/blob/main/train.py#L159).
+In our approach, we directly cluster the data within each class in the training dataset based on grayscale's channel (totally 10x10 = 100 clusters). Moreover, in each epoch of training, we ensure that an equal amount of data from each cluster is trained by the model. And we adopted a strategy of random resampling to balance the data. 
+
+As for how to use these clustering data for balance training so that the model is not affected by unstable features, we have mentioned in the above section `3. transfer the unstable feature to the target task`
+ For more details, see   [TOFU Trainning](https://github.com/edalring/AAI-Final-Project/blob/main/docs/project_report.md#3-transfer-the-unstable-feature-to-the-target-task)and our trainner [DROTrainer](https://github.com/edalring/AAI-Final-Project/blob/main/train.py#L159).
 
 ## Models
 
