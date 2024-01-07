@@ -113,7 +113,7 @@ We need to eliminate the influence of unstable feature and so on in model traini
 - Output: `N(N-1) * M * 2` datasets
   - `N`: Number of environments
   - `N-1`: Number of classifiers trained in other environments
-  - $M$: Number of classes in the classification task
+  - `M`: Number of classes in the classification task
   - `2`: For classification error or correctness
 - Example (`N=2`): 
     ```
