@@ -114,7 +114,11 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 
 ### Test Model
 
-// TODO
+- Test model on the test set to output prediction file
+
+  ```bash
+  python test.py --load_model_path=[saved model path]
+  ```
 
 ## Data Access
 
