@@ -29,7 +29,7 @@ class Tester:
         if not os.path.exists(path):
             os.makedirs(path)
 
-        with open(path+'/test', 'w') as output_file:
+        with open(path+'/test.txt', 'w') as output_file:
             for item in result:
                 output_file.write(item[0] +' '+ item[1]+'\n')
 
