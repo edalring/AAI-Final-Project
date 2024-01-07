@@ -273,9 +273,41 @@ for epoch in range(args.epoch):
 
 ### Why Tofu not works?
 
-### Our Method: The 3'rd step of Tofu
+#### The situatiotn of using Tufo 
+
+Suppose we have multiple datasets that require automatic learning of representations for unstable features. We need to ensure that these datasets belong to different environments. 
+
+To ensure they belong to different environments, we need a clear understanding of what the unstable features are, which would involve manual identification. 
+
+The ultimate goal of TOFU is to cluster datasets into purely different environment datasets and then balance the training. 
+
+#### Our situation
+
+In our dataset, there is no distinction among different environments with unstable features. The absence of different source environments necessitates manual partitioning for TOFU training, rendering the first two steps of TOFU meaningless.
+
+#### Our Method: The 3'rd step of Tofu
+
+Therefore, we skip directly to the third step in TOFU, by passing the first and second steps, manually dividing the different clusters (different environments), and proceeding directly to balanced training.
+
+In our approach, we directly cluster the data within each class in the training dataset based on grayscale's channel (totally 10x10 = 100 clusters). Moreover, in each epoch of training, we ensure that an equal amount of data from each cluster is trained by the model. And we adopted a strategy of random resampling to balance the data.  For more details, see   [TOFU Trainning](https://github.com/edalring/AAI-Final-Project/blob/main/docs/project_report.md#3-transfer-the-unstable-feature-to-the-target-task)and our trainner [DROTrainer](https://github.com/edalring/AAI-Final-Project/blob/main/train.py#L159).
 
 ## Models
+
+The selected models—VGG, CNN, and ExquisiteNetV2—were chosen for their diverse architectural designs and historical efficacy in image classification tasks. It's essential to note that the model parameters were adjusted and fine-tuned according to the specificities of the dataset and task at hand. This adaptation aimed to optimize the models' performance and ensure fair comparisons among them. 
+
+`VGG`
+
+The VGG architecture, renowned for its depth and simplicity, was adapted by modifying the number of layers and channel configurations to suit the dataset characteristics.
+
+`CNN`
+
+The CNN model, with its convolutional layers, pooling operations, and fully connected layers, underwent parameter tuning to align its capacity with the complexity of the classification task.
+
+`ExquisiteNetV2`
+
+ExquisiteNetV2, a sophisticated architecture known for its intricate design and improved performance, was tailored by adjusting various architectural components and hyperparameters to ensure compatibility with the dataset.
+
+The details of our model parameters see [Models](https://github.com/edalring/AAI-Final-Project/tree/main/models)
 
 ## Evaluation
 
@@ -331,23 +363,7 @@ Where:
 
 #### Baseline
 
-The baseline experiment encompasses three fundamental models: VGG, CNN, and ExquisiteNetV2, employed for a classification task. Each model serves as a benchmark in evaluating the performance of novel architectures or techniques.
-
-Model Selection and Adaptation
-
-The selected models—VGG, CNN, and ExquisiteNetV2—were chosen for their diverse architectural designs and historical efficacy in image classification tasks. It's essential to note that the model parameters were adjusted and fine-tuned according to the specificities of the dataset and task at hand. This adaptation aimed to optimize the models' performance and ensure fair comparisons among them.
-
-`VGG`
-
-The VGG architecture, renowned for its depth and simplicity, was adapted by modifying the number of layers and channel configurations to suit the dataset characteristics.
-
-`CNN`
-
-The CNN model, with its convolutional layers, pooling operations, and fully connected layers, underwent parameter tuning to align its capacity with the complexity of the classification task.
-
-`ExquisiteNetV2`
-
-ExquisiteNetV2, a sophisticated architecture known for its intricate design and improved performance, was tailored by adjusting various architectural components and hyperparameters to ensure compatibility with the dataset.
+The baseline experiment encompasses three fundamental models: VGG, CNN, and ExquisiteNetV2, employed for a classification task. Each model serves as a benchmark in evaluating the performance of novel architectures or techniques. We compared the results of all models trained directly on the training set with the results obtained using invariant feature learning to demonstrate the effectiveness of TOFU in Task invariant feature learning.
 
 ### Results
 
@@ -364,7 +380,16 @@ We separately conducted straight fortward training and training with invariant f
 ## Training Visualization
 > We use tensorboard to visualize the training process.
 
-![vis](./pics/training_visualization.png)
+#### Example of cluster trainning process
+
+![image1](./pics/image1.png)
+
+
+#### Example of straight forward trainning process
+
+​	![image2](./pics/image2.png)
+
+
 
 ## How to Reproduce
 
@@ -446,6 +471,15 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 
 
 ## Contribution
+
+- 陈昆秋(50%)：
+  - Backgroud Research 
+  - Training Design
+  - Report Writing
+- 周一凡(50%)：
+  - Data Process
+  - Experiment
+  - Report Writing
 
 
 ## Used Open Resource / Package
