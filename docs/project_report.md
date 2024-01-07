@@ -358,7 +358,7 @@ We separately conducted straight fortward training and training with invariant f
 ## Training Visualization
 > We use tensorboard to visualize the training process.
 
-![image-20240107165449037](./pics/training_visualization.png)
+![vis](./pics/training_visualization.png)
 
 ## How to Reproduce
 
@@ -381,7 +381,7 @@ We separately conducted straight fortward training and training with invariant f
 
 - For Windows with cuda
   ```bash
-  pip install -r requirements_windows_cuda.txt
+  pip install -r requirements_windows_cuda118.txt
   ```
 - For MacOS without cuda
   ```bash
