@@ -90,8 +90,11 @@ We need to eliminate the influence of unstable feature and so on in model traini
 
 - For Windows with cuda
   ```bash
-  pip install -r requirements_windows_cuda.txt
+  pip install -r requirements_windows_cuda118.txt
   ```
+
+  (Note: The example specifies dependencies for hardware CUDA version 11.8. The specific PyTorch version should be downloaded from the PyTorch official website according to the actual situation. See more details: https://pytorch.org/)
+
 - For MacOS without cuda
   ```bash
   pip install -r requirements_macos.txt
@@ -152,7 +155,7 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 
 - [paperwithcode](https://paperswithcode.com/sota/image-classification-on-mnist)
 - [Reasonable Doubt: Get Onto the Top 35 MNIST Leaderboard by Quantifying Aleatoric Uncertainty](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html#4d4e495354)
- 
+
 
 ## Repository
 
