@@ -1,4 +1,5 @@
 import json
+from torch.utils.data import RandomSampler
 import torch
 import torchvision.transforms as transforms
 import torch.nn as nn
@@ -187,27 +188,26 @@ class DROTrainer(Trainer):
                 print('Train: Epoch {}/{} batch {} Loss {}'.format(epoch, self.epochs, i, loss))
     
     # # TODO: figure out should we really need this override method? We can directly use the provided valid set
-    # def val_per_epoch(self, epoch):
-    #     self.model.eval()
+    # # FIX: use the val_loader directly, since the valid set is not divide. Only need to calculate the avg_loss
+    # #      and avg_acc
+    def val_per_epoch(self, epoch):
+        self.model.eval()
 
-    #     for i, batches in enumerate(zip(*self.train_loader)):
-    #         X = torch.cat([batch[0] for batch in batches], dim=0)
-    #         y = torch.cat([batch[1] for batch in batches], dim=0)
-
-    #         img, pred, label = self.step((X, y))
-    #         metrics = self.compute_metrics(pred, label, is_train=False)
+        for i, data in enumerate(self.val_loader):
+            img, pred, label = self.step(data)
+            metrics = self.compute_metrics(pred, label, is_train=False)
 
             
-    #         # get the item for backward
-    #         loss = metrics['train/wst_loss']
+            # get the item for backward
+            # loss = metrics['train/wst_loss']
 
-    #         # logger record
-    #         for key, val in metrics.items():
-    #             self.logger.record_scalar(key, val)
+            # logger record
+            for key, val in metrics.items():
+                self.logger.record_scalar(key, val)
 
-    #         # # only save img at first step
-    #         # if i == len(self.train_loader) - 1:
-    #         #     self.logger.save_imgs(self.gen_imgs_to_write(img, pred, label, True), epoch)
+            # # only save img at first step
+            # if i == len(self.train_loader) - 1:
+            #     self.logger.save_imgs(self.gen_imgs_to_write(img, pred, label, True), epoch)
 
 
     def compute_metrics(self, pred, label, is_train):
@@ -248,22 +248,34 @@ class DROTrainer(Trainer):
 
             return metrics
         else:
-            return super.compute_metrics(pred, label, False)
+            prefix = 'val/'
+        
+            loss    = self.criterion(pred, label)
+            cnt_hit = torch.sum(torch.argmax(pred, dim=1) == label).item()
+            acc     = cnt_hit / len(label)
+
+            metrics = {
+                prefix + 'avg_loss': loss,
+                prefix + 'avg_acc': acc,
+            }
+
+            return metrics
     
 
     def print_per_epoch(self, epoch):
         avg_metric = self.logger.get_average_metric()
 
-
+        print(avg_metric)
         average_train_loss = avg_metric['train/avg_loss']
         train_accuracy     = avg_metric['train/avg_acc']
         average_val_loss   = avg_metric['val/avg_loss']
         val_accuracy       = avg_metric['val/avg_acc']
 
-        average_worst_train_loss = avg_metric['train/wst_loss']
-        worst_train_accuracy     = avg_metric['train/wst_acc']
-        average_worst_val_loss   = avg_metric['val/wst_loss']
-        worst_val_accuracy       = avg_metric['val/wst_acc']
+        # TODO: There is no wst_loss and wst/acc, maybe we don't need it?
+        # average_worst_train_loss = avg_metric['train/wst_loss']
+        # worst_train_accuracy     = avg_metric['train/wst_acc']
+        # average_worst_val_loss   = avg_metric['val/wst_loss']
+        # worst_val_accuracy       = avg_metric['val/wst_acc']
 
         width = int((np.log10(self.epochs) + 1))
         print(f'Epoch {epoch+1:{width}}/{self.epochs} '
@@ -271,23 +283,24 @@ class DROTrainer(Trainer):
             f'      Train Acc: {train_accuracy:.2%}\t'
             f'-       Valid Loss: {average_val_loss:10.8f}\t'
             f'      Valid Acc: {val_accuracy:.2%}')
-        print(f'{"":<{width*2 + 8}}'
-            f'- Worst Train Loss: {average_worst_train_loss:10.8f} \t'
-            f'Worst Train Acc: {worst_train_accuracy:.2%}\t'
-            f'- Worst Valid Loss: {average_worst_val_loss:10.8f}\t'
-            f'Worst Valid Acc: {worst_val_accuracy:.2%}')
+        # print(f'{"":<{width*2 + 8}}'
+        #     f'- Worst Train Loss: {average_worst_train_loss:10.8f} \t'
+        #     f'Worst Train Acc: {worst_train_accuracy:.2%}\t'
+        #     f'- Worst Valid Loss: {average_worst_val_loss:10.8f}\t'
+        #     f'Worst Valid Acc: {worst_val_accuracy:.2%}')
         
 def get_train_loaders(path, batch_size, idx_table):
     train_loaders = []
     for label_idx in range(10):
         for channel_idx in range(10):
-            train_loaders.append(create_dataloader_by_idx(path, int(batch_size/100), idx_table[str(label_idx)][str(channel_idx)]))
+            train_loaders.append(create_dataloader_by_idx(path, int(batch_size//100), idx_table[str(label_idx)][str(channel_idx)]))
     return train_loaders
 
 
 def create_dataloader_by_idx(path, batch_size, idxs):
     dataset = MNISTDataset(data_path=path, mode='train', idxs=idxs)
-    return torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=True)
+    random_sampler = RandomSampler(dataset)
+    return torch.utils.data.DataLoader(dataset, batch_size=batch_size, pin_memory=True, sampler=random_sampler)
 
 def main():
     args = options.prepare_train_args()
@@ -309,11 +322,15 @@ def main():
         trainer = Trainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
     else:
         # TODO: fix this
+        # FIX: train step for diiferent envs:
+        #      1. load the idx infomation from json file
+        #      2. prepare train loaders: totally 10(class num)*10(env num) = 100 dataloader
+        #      3. prepare validloader: since the valid set is small, set batch_size = length of valid set
         with open('utils/data.json', 'r') as json_file:
             idx_table = json.load(json_file)
         trainloader = get_train_loaders(data_path, args.batch_size, idx_table)
         val_dataset = MNISTDataset(data_path=data_path, mode='val', idxs=None)
-        validloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+        validloader = torch.utils.data.DataLoader(val_dataset, len(val_dataset), shuffle=True, pin_memory=True)
         trainer = DROTrainer(model=model, criterion=critirion, train_loader=trainloader, val_loader=validloader, args=args)
 
     trainer.train()
