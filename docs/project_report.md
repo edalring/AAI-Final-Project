@@ -290,14 +290,16 @@ for epoch in range(args.epoch):
   - L1 Cache: 1.4 MB
 	- L2 Cache:	14.0 MB
 	- L3 Cache:	30.0 MB
-
 - **Software Platform**
   - Operating System: Windows
   - CUDA: 12.2
   - Pytorch: 2.1.2+cu121
   - Python: Python3.8
-
 - **Super Parameters**
+  - Learning rate: 0.001
+  - Momentum: 0.9
+  - Batch size: 200
+  - Epcoch number: 100
 
 #### Dataset
 
@@ -412,10 +414,16 @@ You can see the options in [`options.py`](https://github.com/edalring/AAI-Final-
 - Test model on the test set to output prediction file
 
   ```bash
-  python test.py --load_model_path=[saved model path]
+  python test.py --load_model_path=[saved model path] --model_type=[xxx] # vgg by default
   ```
 
-  
+- Try on the best model
+
+  We select the best model in out trainning process, you can get the same `test.txt` file by
+
+  ```bash
+  python test.py  --load_model_path=best_model\best.pth --model_type=vgg
+  ```
 
 #### Data Access
 
