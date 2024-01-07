@@ -57,7 +57,7 @@ def get_test_args():
 
 
 def get_train_model_dir(args):
-    model_dir = os.path.join('checkpoints', args.model_type + '_' + args.save_prefix + '\\straight_forward' if args.straight_forward else '\\env_divided')
+    model_dir = os.path.join('checkpoints', args.model_type + '_' + args.save_prefix + ('\\straight_forward' if args.straight_forward else '\\env_divided'))
     if not os.path.exists(model_dir):
         os.system('mkdir -p ' + model_dir)
     args.model_dir = model_dir
