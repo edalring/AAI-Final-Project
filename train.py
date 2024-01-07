@@ -337,11 +337,6 @@ def main():
 
     trainer.train()
 
-    test_dataset = MNISTDataset(data_path=args.data_path, mode='test')
-    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=200, shuffle=True, pin_memory=True)
-    tester = Tester(args, model, testloader)
-    tester.test()
-    print('test_pass!')
 
 
 if __name__ == '__main__':
