@@ -43,7 +43,8 @@ def prepare_model(args, is_train: bool = True):
 
         model = torch.nn.DataParallel(model)
     else:
-        model.load_state_dict(torch.load(args.load_model_path).state_dict())
+        model = torch.nn.DataParallel(model)
+        model.load_state_dict(torch.load(args.load_model_path))
         model.eval()
 
     return model
