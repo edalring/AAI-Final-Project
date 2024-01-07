@@ -7,7 +7,7 @@ from utils.data_analysis import resolve_greyscale_channel
 from utils.torch_utils import load_npy_as_ndarray, multi_processes_execute
 
 class MNISTDataset(Dataset):
-    def __init__(self, data_path, mode, idxs):
+    def __init__(self, data_path, mode, idxs=None):
         self.data_root = Path(data_path) / mode
 
         if not self.data_root.exists():
